@@ -6,9 +6,11 @@
 					<AppCard
 						:title="post.title"
 						:contents="post.contents"
-						:isLike="post.isLike"
+						:is-like="post.isLike"
 						:type="post.type"
+						@toggle-like="post.isLike = !post.isLike"
 					/>
+					<button @click="post.isLike = !post.isLike">toggle</button>
 				</div>
 			</div>
 		</div>
