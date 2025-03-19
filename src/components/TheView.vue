@@ -1,6 +1,8 @@
 <template>
 	<main>
 		<div class="container py-4">
+			<PostCreate @create-post="createPost" />
+			<hr class="my-4" />
 			<div class="row g-3">
 				<div v-for="post in posts" :key="post.id" class="col col-4">
 					<AppCard
@@ -10,7 +12,6 @@
 						:type="post.type"
 						@toggle-like="post.isLike = !post.isLike"
 					/>
-					<button @click="post.isLike = !post.isLike">toggle</button>
 				</div>
 			</div>
 		</div>
@@ -19,9 +20,11 @@
 
 <script>
 import AppCard from './AppCard.vue';
+import PostCreate from './PostCreate.vue';
+
 import { reactive } from 'vue';
 export default {
-	components: { AppCard },
+	components: { AppCard, PostCreate },
 	setup() {
 		const post = reactive({
 			title: '제목2',
@@ -46,7 +49,12 @@ export default {
 				type: 'notice',
 			},
 		]);
-		return { post, posts };
+
+		const createPost = newPost => {
+			console.log('createPost', newPost);
+			posts.push(newPost);
+		};
+		return { post, posts, createPost };
 	},
 };
 </script>
