@@ -1,5 +1,5 @@
 <template>
-	<label>
+	<label class="child-class" style="border: 1px solid black" id="child-id">
 		{{ label }}
 		<!-- :value="modelValue" -- /> @input="event =>
 		$emit('update:modelValue', event.target.value)"-->
