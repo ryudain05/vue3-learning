@@ -14,6 +14,12 @@
 					/>
 				</div>
 			</div>
+			<hr class="my-4" />
+			<!--
+        modelValue => 사용자 정의 컴포넌트에서는 props 로 model value 값을 넘기고
+        update:modelValue => 이벤트로는 update:modelValue 로 구현한다.
+       -->
+			<LabelInput v-model="username" label="이름" />
 		</div>
 	</main>
 </template>
@@ -21,10 +27,11 @@
 <script>
 import AppCard from './AppCard.vue';
 import PostCreate from './PostCreate.vue';
+import LabelInput from './LabelInput.vue';
+import { reactive, ref } from 'vue';
 
-import { reactive } from 'vue';
 export default {
-	components: { AppCard, PostCreate },
+	components: { AppCard, PostCreate, LabelInput },
 	setup() {
 		const post = reactive({
 			title: '제목2',
@@ -54,7 +61,9 @@ export default {
 			console.log('createPost', newPost);
 			posts.push(newPost);
 		};
-		return { post, posts, createPost };
+
+		const username = ref('');
+		return { post, posts, createPost, username };
 	},
 };
 </script>
