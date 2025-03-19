@@ -2,12 +2,14 @@
 	<main>
 		<div class="container py-4">
 			<div class="row g-3">
-				<div class="col col-4"><AppCard /></div>
-				<div class="col col-4"><AppCard /></div>
-				<div class="col col-4"><AppCard /></div>
-				<div class="col col-4"><AppCard /></div>
-				<div class="col col-4"><AppCard /></div>
-				<div class="col col-4"><AppCard /></div>
+				<div v-for="post in posts" :key="post.id" class="col col-4">
+					<AppCard
+						:title="post.title"
+						:contents="post.contents"
+						:isLike="post.isLike"
+						:type="post.type"
+					/>
+				</div>
 			</div>
 		</div>
 	</main>
@@ -15,10 +17,34 @@
 
 <script>
 import AppCard from './AppCard.vue';
+import { reactive } from 'vue';
 export default {
 	components: { AppCard },
 	setup() {
-		return {};
+		const post = reactive({
+			title: '제목2',
+			contents: '내용2',
+		});
+		const posts = reactive([
+			{ id: 1, title: '제목1', contents: '제목1', isLike: true, type: 'news' },
+			{ id: 2, title: '제목2', contents: '제목2', isLike: true, type: 'news' },
+			{ id: 3, title: '제목3', contents: '제목3', isLike: true, type: 'news' },
+			{
+				id: 4,
+				title: '제목4',
+				contents: '제목4',
+				isLike: false,
+				type: 'notice',
+			},
+			{
+				id: 5,
+				title: '제목5',
+				contents: '제목5',
+				isLike: false,
+				type: 'notice',
+			},
+		]);
+		return { post, posts };
 	},
 };
 </script>

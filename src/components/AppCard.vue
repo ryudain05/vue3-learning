@@ -1,24 +1,45 @@
 <template>
 	<div class="card">
 		<div class="card-body">
-			<h5 class="card-title">Card title</h5>
+			<!-- type : news, notice  -->
+			<span class="badge text-bg-secondary">{{
+				type === 'news' ? '뉴스' : '공지사항'
+			}}</span>
+			<h5 class="card-title light-blue mt-2">{{ title }}</h5>
 			<p class="card-text">
-				Some quick example text to build on the card title and make up the bulk
-				of the card's content.
+				{{ contents }}
 			</p>
-			<a href="#" class="btn btn-primary">Go somewhere</a>
+			<a href="#" v-if="isLike" class="btn btn-danger">좋아요</a>
+			<a href="#" v-else class="btn btn-outline-danger">좋아요</a>
 		</div>
 	</div>
 </template>
 
 <script>
-console.log('AppCard module');
 export default {
+	props: {
+		type: {
+			type: String,
+			default: 'news',
+		},
+		title: {
+			type: String,
+			required: true,
+		},
+		contents: {
+			type: String,
+			required: true,
+		},
+		isLike: {
+			type: Boolean,
+			default: false,
+		},
+	},
+
 	setup() {
-		console.log('AppCard setup()');
 		return {};
 	},
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
