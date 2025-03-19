@@ -20,6 +20,8 @@
         update:modelValue => 이벤트로는 update:modelValue 로 구현한다.
        -->
 			<LabelInput v-model="username" label="이름" />
+			<LabelTitle v-model:title="username" label="제목" />
+			<Username v-model:firstname="firstname" v-model:lastname="lastname" />
 		</div>
 	</main>
 </template>
@@ -28,10 +30,12 @@
 import AppCard from './AppCard.vue';
 import PostCreate from './PostCreate.vue';
 import LabelInput from './LabelInput.vue';
+import LabelTitle from './LabelTitle.vue';
+import Username from './Username.vue';
 import { reactive, ref } from 'vue';
 
 export default {
-	components: { AppCard, PostCreate, LabelInput },
+	components: { AppCard, PostCreate, LabelInput, LabelTitle, Username },
 	setup() {
 		const post = reactive({
 			title: '제목2',
@@ -63,7 +67,9 @@ export default {
 		};
 
 		const username = ref('');
-		return { post, posts, createPost, username };
+		const firstname = ref('');
+		const lastname = ref('');
+		return { post, posts, createPost, username, firstname, lastname };
 	},
 };
 </script>
