@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>제목</h2>
-    <h2>내용</h2>
-    <p class="text-muted">2021-01-01</p>
+    <h2>{{ form.title }}</h2>
+    <h2>{{ form.content }}</h2>
+    <p class="text-muted">{{ form.createdAt }}</p>
     <hr class="my-4" />
     <div class="row g-2">
       <div class="col-auto">
@@ -28,18 +28,40 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { getPostById } from '@/api/posts';
+import { ref } from 'vue';
+
+const props = defineProps({
+  id: Number,
+});
 
 const router = useRouter();
-const route = useRoute();
-const id = route.params.id;
+/**
+ * ref
+ * 장) 객체 할당 가능
+ * 단) form.value.title, form.value.content
+ * 장) 일관성 유지 -> page component 에서는 ref 를 권장
+ *
+ * reactive
+ * 장) form.value.title, form.value.content
+ * 단) 객체 할당 불가능
+ */
+
+// eslint-disable-next-line no-undef
+const form = ref({});
 
 const goListPage = () => {
   router.push({ name: 'PostList' });
 };
 const goEditPage = () => {
-  router.push({ name: 'PostEdit', params: { id } });
+  router.push({ name: 'PostEdit', params: { id: props.id } });
 };
+const featchPost = () => {
+  const data = getPostById(props.id);
+  form.value = { ...data };
+};
+featchPost();
 </script>
 
 <style lang="scss" scoped></style>
