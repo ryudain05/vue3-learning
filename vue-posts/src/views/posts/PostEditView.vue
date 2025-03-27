@@ -67,9 +67,9 @@ const edit = async () => {
 //alert
 const showAlert = ref(false);
 const alertMessage = ref('');
-const alertType = ref('');
+const alertType = ref('error');
 
-const valert = (message, type = 'error') => {
+const valert = (message, type) => {
   showAlert.value = true;
   alertMessage.value = message;
   alertType.value = type;
