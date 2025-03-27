@@ -3,12 +3,16 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from '@/router';
-import globalComponents from '@/plugins/global-components';
+import globalDirectives from './plugins/global-directives';
+// import globalComponents from '@/plugins/global-components';
+// import focus from './directives/focus';
 
 const app = createApp(App);
 app.use(router);
 app.mount('#app');
-app.use(globalComponents);
+app.use(globalDirectives);
+// app.use(globalComponents);
+// app.directive('focus', focus);
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 // console.log('MODE: ', import.meta.env.MODE);
