@@ -28,7 +28,6 @@ import PostForm from '@/components/posts/PostForm.vue';
 import { ref } from 'vue';
 import { getPostById } from '@/api/posts';
 import { updatePost } from '@/api/posts';
-import AppAlert from '@/components/AppAlert.vue';
 
 const route = useRoute();
 const router = useRouter();
