@@ -18,7 +18,7 @@
         <button class="btn btn-dark">수정</button>
       </template>
     </PostForm>
-    <AppAlert />
+    <AppAlert :show="showAlert" :message="alertMessage" :type="alertType" />
   </div>
 </template>
 
@@ -46,6 +46,7 @@ const fetchPost = async () => {
     setForm(data);
   } catch (error) {
     console.log(error);
+    valert('네트워크 오류! ');
   }
 };
 const setForm = ({ title, content }) => {
@@ -56,10 +57,25 @@ const setForm = ({ title, content }) => {
 const edit = async () => {
   try {
     await updatePost(id, { ...form.value });
-    goDetailPage(id);
+    // goDetailPage(id);
+    valert('수정이 완료되었습니다 !!', 'success');
   } catch (error) {
     console.log(error);
   }
+};
+
+//alert
+const showAlert = ref(false);
+const alertMessage = ref('');
+const alertType = ref('');
+
+const valert = (message, type = 'error') => {
+  showAlert.value = true;
+  alertMessage.value = message;
+  alertType.value = type;
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 2000);
 };
 fetchPost();
 </script>
