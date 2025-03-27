@@ -18,7 +18,6 @@
         <button class="btn btn-dark">수정</button>
       </template>
     </PostForm>
-    <AppAlert :items="alerts" />
   </div>
 </template>
 
@@ -28,6 +27,9 @@ import PostForm from '@/components/posts/PostForm.vue';
 import { ref } from 'vue';
 import { getPostById } from '@/api/posts';
 import { updatePost } from '@/api/posts';
+import { useAlert } from '@/composables/alert';
+
+const { valert, vSuccess } = useAlert();
 
 const route = useRoute();
 const router = useRouter();
@@ -56,20 +58,12 @@ const setForm = ({ title, content }) => {
 const edit = async () => {
   try {
     await updatePost(id, { ...form.value });
-    valert('수정이 완료되었습니다.', 'success');
+    vSuccess('수정이 완료되었습니다.');
+    goDetailPage();
   } catch (error) {
     console.log(error);
     valert(error.message);
   }
-};
-
-const alerts = ref([]);
-
-const valert = (message, type) => {
-  alerts.value.push({ message, type });
-  setTimeout(() => {
-    alerts.value.shift();
-  }, 2000);
 };
 fetchPost();
 </script>

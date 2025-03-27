@@ -21,6 +21,9 @@ import { useRouter } from 'vue-router';
 import PostForm from '@/components/posts/PostForm.vue';
 import { createPost } from '@/api/posts';
 import { ref } from 'vue';
+import { useAlert } from '@/composables/alert';
+
+const { valert, vSuccess } = useAlert();
 
 const router = useRouter();
 // eslint-disable-next-line no-undef
@@ -35,9 +38,10 @@ const save = () => {
       ...form.value,
       createdAt: Date.now(),
     });
-    goListPage();
+    vSuccess('등록이 완료되었습니다.');
+    // goListPage();
   } catch (error) {
-    console.log(error);
+    valert(error.message);
   }
 };
 
