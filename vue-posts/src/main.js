@@ -3,12 +3,14 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from '@/router';
-import globalDirectives from './plugins/global-directives';
+import globalDirectives from '@/plugins/global-directives.js';
+import dayjs from './plugins/dayjs';
 // import globalComponents from '@/plugins/global-components';
 // import focus from './directives/focus';
 
 const app = createApp(App);
 app.use(router);
+app.use(dayjs);
 app.mount('#app');
 app.use(globalDirectives);
 // app.use(globalComponents);
