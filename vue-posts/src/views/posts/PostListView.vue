@@ -7,15 +7,22 @@
       v-model:limit="params._limit"
     ></PostFilter>
     <hr class="my-4" />
-    <AppGrid :items="posts" v-slot="{ item }">
-      <PostItem
-        :title="item.title"
-        :content="item.content"
-        :created-at="item.createdAt"
-        @click="goPage(item.id)"
-        @modal="openModal(item)"
-      />
-    </AppGrid>
+
+    <AppLoading v-if="loading"></AppLoading>
+    <AppError v-else-if="error" :message="error.message"></AppError>
+
+    <template v-else>
+      <AppGrid :items="posts" v-slot="{ item }">
+        <PostItem
+          :title="item.title"
+          :content="item.content"
+          :created-at="item.createdAt"
+          @click="goPage(item.id)"
+          @modal="openModal(item)"
+        />
+      </AppGrid>
+    </template>
+
     <AppPagination
       :current-page="params._page"
       :page-count="pageCount"
@@ -58,6 +65,9 @@ const params = ref({
   title_like: '',
 });
 
+const error = ref(null);
+const loading = ref(false);
+
 // pagination
 const totalCount = ref(0);
 const pageCount = computed(() =>
@@ -66,11 +76,14 @@ const pageCount = computed(() =>
 
 const fetchPosts = async () => {
   try {
+    loading.value = true;
     const { data, headers } = await getPosts(params.value);
     posts.value = data;
     totalCount.value = headers['x-total-count'];
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    error.value = err;
+  } finally {
+    loading.value = false;
   }
   // ({ data: posts.value } = await getPosts()); //then 으로 받는 것과 같음
 

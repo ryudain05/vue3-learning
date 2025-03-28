@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <AppLoading v-if="loading"></AppLoading>
+  <AppError v-else-if="error" :message="error.message"></AppError>
+  <div v-else>
     <h2>게시글 수정</h2>
     <hr class="my-4" />
+    <AppError v-if="editError" :message="editError.message"></AppError>
     <PostForm
       @submit.prevent="edit"
       v-model:title="form.title"
@@ -15,7 +18,17 @@
         >
           취소
         </button>
-        <button class="btn btn-dark">수정</button>
+        <button class="btn btn-primary" :disabled="editLoading">
+          <template v-if="editLoading">
+            <span
+              class="spinner-grow spinner-grow-sm"
+              aria-hidden="true"
+              role="status"
+            ></span>
+            <span class="visually-hidden">Loading...</span>
+          </template>
+          <template v-else>수정</template>
+        </button>
       </template>
     </PostForm>
   </div>
@@ -35,6 +48,8 @@ const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
 
+const error = ref(null);
+const loading = ref(false);
 const goDetailPage = () => router.push({ name: 'PostDetail', params: { id } });
 const form = ref({
   title: null,
@@ -43,11 +58,13 @@ const form = ref({
 
 const fetchPost = async () => {
   try {
+    loading.value = true;
     const { data } = await getPostById(id);
     setForm(data);
-  } catch (error) {
-    console.log(error);
-    valert(error.message);
+  } catch (err) {
+    error.value = err;
+  } finally {
+    loading.value = false;
   }
 };
 const setForm = ({ title, content }) => {
@@ -55,16 +72,23 @@ const setForm = ({ title, content }) => {
   form.value.content = content;
 };
 
+const editError = ref(null);
+const editLoading = ref(false);
+
 const edit = async () => {
   try {
+    editLoading.value = true;
     await updatePost(id, { ...form.value });
     vSuccess('수정이 완료되었습니다.');
     goDetailPage();
-  } catch (error) {
-    console.log(error);
-    valert(error.message);
+  } catch (err) {
+    valert(err.message);
+    editError.value = err;
+  } finally {
+    editLoading.value = false;
   }
 };
+
 fetchPost();
 </script>
 
