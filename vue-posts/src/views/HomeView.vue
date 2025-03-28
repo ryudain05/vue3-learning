@@ -16,7 +16,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { reactive, ref, toRef, toRefs } from 'vue';
+import { reactive, toRefs } from 'vue';
 
 const router = useRouter();
 const goAboutPage = () => {
