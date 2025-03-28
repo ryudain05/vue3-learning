@@ -51,12 +51,11 @@ import PostDetailView from '@/views/posts/PostDetailView.vue';
 import PostFilter from '@/components/posts/PostFilter.vue';
 import PostModal from '@/components/posts/PostModal.vue';
 
-import { getPosts } from '@/api/posts';
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAxios } from '@/hooks/useAxios';
 
 const router = useRouter();
-const posts = ref([]);
 const params = ref({
   _sort: 'createdAt',
   _order: 'desc',
@@ -64,39 +63,42 @@ const params = ref({
   _limit: 3,
   title_like: '',
 });
-
-const error = ref(null);
-const loading = ref(false);
-
+const {
+  response,
+  data: posts,
+  error,
+  loading,
+} = useAxios('/posts', { params });
 // pagination
-const totalCount = ref(0);
+const totalCount = computed(() => response.value.headers['x-total-count']);
 const pageCount = computed(() =>
   Math.ceil(totalCount.value / params.value._limit),
 );
 
-const fetchPosts = async () => {
-  try {
-    loading.value = true;
-    const { data, headers } = await getPosts(params.value);
-    posts.value = data;
-    totalCount.value = headers['x-total-count'];
-  } catch (err) {
-    error.value = err;
-  } finally {
-    loading.value = false;
-  }
-  // ({ data: posts.value } = await getPosts()); //then 으로 받는 것과 같음
+// const fetchPosts = async () => {
+//   try {
+//     loading.value = true;
+//     const { data, headers } = await getPosts(params.value);
+//     posts.value = data;
+//     totalCount.value = headers['x-total-count'];
+//   } catch (err) {
+//     error.value = err;
+//   } finally {
+//     loading.value = false;
+//   }
+// };
+// watchEffect(fetchPosts);
+// ({ data: posts.value } = await getPosts()); //then 으로 받는 것과 같음
 
-  // getPosts()
-  //   .then(response => {
-  //     console.log(response);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-};
+// getPosts()
+//   .then(response => {
+//     console.log(response);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
+
 // fetchPosts();
-watchEffect(fetchPosts);
 
 const goPage = id => {
   // router.push(`/posts/${id}`);

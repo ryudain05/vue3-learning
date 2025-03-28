@@ -48,30 +48,37 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { getPostById, deletePost } from '@/api/posts';
-import { ref } from 'vue';
+import { deletePost } from '@/api/posts';
 import { useAlert } from '@/composables/alert';
+import { useAxios } from '@/hooks/useAxios';
 
-const { valert, vSuccess } = useAlert();
+const { vAlert, vSuccess } = useAlert();
 
 const props = defineProps({
   id: [String, Number],
 });
 
 const router = useRouter();
-/**
- * ref
- * 장) 객체 할당 가능
- * 단) post.value.title, post.value.content
- * 장) 일관성 유지 -> page component 에서는 ref 를 권장
- *
- * reactive
- * 장) post.value.title, post.value.content
- * 단) 객체 할당 불가능
- */
+const { data: post, error, loading } = useAxios(`/posts/${props.id}`);
 
-// eslint-disable-next-line no-undef
-const post = ref({});
+const {
+  error: removeError,
+  loading: removeLoading,
+  execute,
+} = useAxios(
+  `/posts/${props.id}`,
+  { method: 'delete' },
+  {
+    immediate: false,
+    onSuccess: () => {
+      vSuccess('삭제가 완료되었습니다.');
+      goListPage();
+    },
+    onError: err => {
+      vAlert(err.message);
+    },
+  },
+);
 
 const goListPage = () => {
   router.push({ name: 'PostList' });
@@ -79,46 +86,11 @@ const goListPage = () => {
 const goEditPage = () => {
   router.push({ name: 'PostEdit', params: { id: props.id } });
 };
-const fetchPost = async () => {
-  try {
-    loading.value = true;
-    const { data } = await getPostById(props.id);
-    setPost(data);
-  } catch (err) {
-    error.value = err;
-  } finally {
-    loading.value = false;
-  }
-};
-const setPost = ({ title, content, createdAt }) => {
-  post.value.title = title;
-  post.value.content = content;
-  post.value.createdAt = createdAt;
-};
-
-const removeError = ref(null);
-const removeLoading = ref(null);
 
 const remove = async () => {
-  try {
-    if (confirm('삭제 하시겠습니까?') === false) return;
-
-    removeLoading.value = true;
-    await deletePost(props.id);
-    vSuccess('삭제가 완료되었습니다.');
-    goListPage();
-  } catch (err) {
-    valert(err.message);
-    removeError.value = err;
-  } finally {
-    removeLoading.value = false;
-  }
+  if (confirm('삭제 하시겠습니까?') === false) return;
+  execute();
 };
-
-const error = ref(null);
-const loading = ref(false);
-
-fetchPost();
 </script>
 
 <style lang="scss" scoped></style>
