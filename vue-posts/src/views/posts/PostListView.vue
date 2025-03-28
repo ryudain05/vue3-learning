@@ -19,6 +19,7 @@
           :created-at="item.createdAt"
           @click="goPage(item.id)"
           @modal="openModal(item)"
+          @preview="selectPreview(item.id)"
         />
       </AppGrid>
     </template>
@@ -36,10 +37,10 @@
         :created-at="modalCreatedAt"
       />
     </Teleport>
-    <template v-if="posts && posts.length > 0">
+    <template v-if="previewId">
       <hr class="my-5" />
       <AppCard>
-        <PostDetailView :id="posts[0].id" />
+        <PostDetailView :id="previewId" />
       </AppCard>
     </template>
   </div>
@@ -56,6 +57,8 @@ import { useRouter } from 'vue-router';
 import { useAxios } from '@/hooks/useAxios';
 
 const router = useRouter();
+const previewId = ref(null);
+const selectPreview = id => (previewId.value = id);
 const params = ref({
   _sort: 'createdAt',
   _order: 'desc',
@@ -74,31 +77,6 @@ const totalCount = computed(() => response.value.headers['x-total-count']);
 const pageCount = computed(() =>
   Math.ceil(totalCount.value / params.value._limit),
 );
-
-// const fetchPosts = async () => {
-//   try {
-//     loading.value = true;
-//     const { data, headers } = await getPosts(params.value);
-//     posts.value = data;
-//     totalCount.value = headers['x-total-count'];
-//   } catch (err) {
-//     error.value = err;
-//   } finally {
-//     loading.value = false;
-//   }
-// };
-// watchEffect(fetchPosts);
-// ({ data: posts.value } = await getPosts()); //then 으로 받는 것과 같음
-
-// getPosts()
-//   .then(response => {
-//     console.log(response);
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   });
-
-// fetchPosts();
 
 const goPage = id => {
   // router.push(`/posts/${id}`);
