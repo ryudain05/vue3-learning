@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 import { useAlert } from '@/composables/alert';
 import { useAxios } from '@/hooks/useAxios';
 import { computed, toRef } from 'vue';
@@ -82,6 +82,10 @@ const {
     },
   },
 );
+const remove = async () => {
+  if (confirm('삭제 하시겠습니까?') === false) return;
+  execute();
+};
 
 const goListPage = () => {
   router.push({ name: 'PostList' });
@@ -90,10 +94,18 @@ const goEditPage = () => {
   router.push({ name: 'PostEdit', params: { id: props.id } });
 };
 
-const remove = async () => {
-  if (confirm('삭제 하시겠습니까?') === false) return;
-  execute();
+onBeforeRouteUpdate(() => {
+  console.log('beforeRouteUpdate');
+});
+onBeforeRouteLeave(() => {
+  console.log('beforeRouteLeave');
+});
+</script>
+<script>
+export default {
+  beforeRouteEnter() {
+    console.log('beforeRouteEnter');
+  },
 };
 </script>
-
 <style lang="scss" scoped></style>
