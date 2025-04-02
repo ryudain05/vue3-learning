@@ -2,7 +2,7 @@
   <header>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">YOO, DAIN</a>
+        <RouterLink class="navbar-brand" to="/"> YOO, DAIN</RouterLink>
         <button
           class="navbar-toggler"
           type="button"
